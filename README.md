@@ -25,14 +25,14 @@ At the time of writing, there are the following test frameworks for Julia:
     * lacks test grouping and running features
     * only recently prints failed comparison results
 * [zachallaun/FactCheck.jl] (https://github.com/zachallaun/FactCheck.jl)
-    * test output is verbose
+    * test output is verbose, has extra newlines
     * doesn't support setup/teardown functions
     * requires tests to use special `=>` operator and define comparisons as
       functions
 * [pao/QuickCheck.jl] (https://github.com/pao/QuickCheck.jl)
     * very cool, but not a general-purpose test runner
 * [burrowsa/Fixtures.jl] (https://github.com/burrowsa/Fixtures.jl)
-    * lots of cool features for handling various setup/teardown testing
+    * lots of features for handling various setup/teardown testing
     * doesn't handle printing of results or running tests
     * something feels a little overcomplicated about the fixture definition
 * [burrowsa/RunTests.jl] (https://github.com/burrowsa/RunTests.jl)
@@ -68,7 +68,7 @@ At the time of writing, there are the following test frameworks for Julia:
 To set up the test runner, just create a file in your package called
 `test/runtests.jl` that looks something like:
 
-    using Pragmatest
+    import Pragmatest
 
     Pragmatest.run()
 
@@ -78,11 +78,32 @@ in a useful report.
 
 ## Minimal Test File
 
-    # TestSample1.jl
+The simplest test file could just be a collection of @test statements. When run with
+`Pragmatest.run()` as above, the results will be collected and displayed.
 
-    module TestSample1
+    # TestSample1.jl
 
     @test 1 == 1
     @test 1 == 2
 
-    end # module TestSample1
+
+## Grouping Tests
+
+You can group tests by placing them inside a Module. You can have multiple test
+modules inside a single test file, or split them across separate files.
+
+    # TestSample2.jl
+
+    module EqualityTests
+
+    @test 1 == 1
+    @test 1 == 2
+
+    end
+
+    module InequalityTests
+
+    @test 1 <= 1
+    @test 1 <= 2
+
+    end
